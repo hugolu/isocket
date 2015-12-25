@@ -1,0 +1,63 @@
+#!/usr/bin/env lua
+require "utils"
+
+local BUFSIZ = (1024*1024)
+
+local conf = load_file('lsocket.conf')
+local SERV = conf["server"]
+local PORT = conf["port"]
+
+-- load namespace
+local luaevent = require("luaevent")
+local socket = require("socket")
+local lfs = require("lfs")
+
+-- create a TCP socket and bind it to the local host, at any port
+local server = assert(socket.bind(SERV, PORT))
+server:settimeout(0)
+
+-- print a message informing what's up
+local ip, port = server:getsockname()
+--printf("Please telnet to %s:%d\n", ip, port)
+
+-- write data from sock to file
+local function write(sock, file, size)
+    local offset = 0
+    while offset < size do
+        local len = math.min(size-offset, BUFSIZ)
+        local buf = luaevent.receive(sock, len)
+        file:write(buf)
+        offset = offset + len
+    end
+end
+
+-- event handler
+local function fsyncHandler(sock)
+    printf("New connection %s\n", sock)
+    while true do
+        local data, ret = luaevent.receive(sock, '*l')
+        local args = data and data:split(":") or {}
+
+        show_array(args)
+        if data == "STOP" or ret == 'closed' then break end
+
+        ctrl, path, size = args[1], args[2], tonumber(args[3])
+        if ctrl ~= "FILE" then break end
+        luaevent.send(sock, "OK\n")
+
+        lfs.mkdir(dirname(path))
+        file = io.open(path, "w")
+        write(sock, file, size)
+        file:close()
+        luaevent.send(sock, "OK\n")
+
+        collectgarbage()
+    end
+
+    printf("%s stoped\n", sock)
+    luaevent.close(sock)
+end
+
+-- start server
+luaevent.addserver(server, fsyncHandler)
+luaevent.loop()

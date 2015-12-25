@@ -1,0 +1,56 @@
+#!/usr/bin/env lua
+require "utils"
+
+local LIST = arg[1]
+local BUFSIZ = (1024*1024)
+
+local conf = load_file('lsocket.conf')
+local SERV = conf["server"]
+local PORT = conf["port"]
+
+local socket = require("socket")
+local table = require("table")
+local tcp = assert(socket.tcp())
+
+-- write data from file to sock
+local function write(file, sock, size)
+    local offset = 0
+    while offset < size do
+        local len = math.min(size-offset, BUFSIZ)
+        sock:send(file:read(len))
+        offset = offset + len
+    end
+end
+
+-- send file
+local function send(sock, path)
+    local file = io.open(path, "r")
+    local size = tonumber(fsize(file))
+    local args = {"FILE", path, size}
+    show_array(args)
+
+    sock:send(table.concat(args, ":") .. "\n")
+    local resp = sock:receive("*l")
+
+    write(file, sock, size)
+    local resp = sock:receive("*l")
+
+    file:close()
+end
+
+-- open fsync.log
+print("File sync starting...")
+rc = tcp:connect(SERV, PORT)
+if not rc then print("bad socket"); os.exit() end
+
+list = io.open(LIST, "r")
+while true do
+        local path = list:read()
+        if not path then break end
+
+        send(tcp, path)
+end
+tcp:send("STOP\n")
+
+tcp:close()
+print("File sync stoped")
