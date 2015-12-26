@@ -16,7 +16,7 @@ function gen_dbtag() {
     touch -t ${timestamp} ${dir}/finished.parse
 }
 
-function gen_log() {
+function gen_answer() {
     dir=$1 
 
     for ((i=0; i<3; i++)); do
@@ -40,24 +40,25 @@ function setup() {
     cd ${ED1}
     gen_dbtag "dir/DC1"
     gen_dbtag "dir/DC2"
+    gen_dbtag "dir/DC3"
 }
 
 function execute() {
     cd ${ED1}
 
-    ./scan.sh &
-    echo $! > scan.pid
+    ./scan.sh
 
-    sleep 1
-    kill -9 $(cat scan.pid)
+    #sleep 1
+    #kill -9 $(cat scan.pid) 2>/dev/null
 }
 
 function verify() {
     cd ${ED1}
 
     > watch.ans
-    gen_log "dir/DC1"
-    gen_log "dir/DC2"
+    gen_answer "dir/DC1"
+    gen_answer "dir/DC2"
+    gen_answer "dir/DC3"
 
     diff watch.log watch.ans && echo "Pass" || echo "Failed"
 }

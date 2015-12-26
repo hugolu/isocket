@@ -1,8 +1,7 @@
 #!/bin/bash
 source scan.conf
 
-while [ 1 ]
-do
+function scandir() {
     dbtags=$(ls ${dir} | grep ${tag} | sort)
     for dbtag in ${dbtags}
     do
@@ -30,4 +29,10 @@ do
         ${watch} ${dir}/${dbtag}
     done
     sleep ${check_interval}
+}
+
+while true
+do
+    scandir
+    [ $(basename $0) == "scan.daemon" ] || break
 done
