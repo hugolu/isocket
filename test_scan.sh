@@ -5,17 +5,24 @@ ED1="${ROOT}/ED1"
 
 function gen_dbtag() {
     dir=$1
-
     mkdir ${dir}
+
     for ((i=0; i<3; i++)); do
-        touch ${dir}/file${i}
-        sleep 1
+        timestamp=$(printf "15122500%02d.00" ${i})
+        touch -t ${timestamp} ${dir}/file${i}
     done
-    touch ${dir}/finished.parse
+
+    timestamp=$(printf "15122500%02d.00" ${i})
+    touch -t ${timestamp} ${dir}/finished.parse
 }
 
-function chkfile() {
-    :
+function gen_log() {
+    dir=$1 
+
+    for ((i=0; i<3; i++)); do
+        echo "${dir}/file${i}" >> watch.ans
+    done
+    echo ${dir}/finished.parse >> watch.ans
 }
 
 function cleanup() {
@@ -30,8 +37,9 @@ function setup() {
     cp scan.sh scan.conf ${ED1}
     cp watch.sh watch.conf ${ED1}
 
-    gen_dbtag "${ED1}/dir/DC1"
-    gen_dbtag "${ED1}/dir/DC2"
+    cd ${ED1}
+    gen_dbtag "dir/DC1"
+    gen_dbtag "dir/DC2"
 }
 
 function execute() {
@@ -41,12 +49,17 @@ function execute() {
     echo $! > scan.pid
 
     sleep 1
-
     kill -9 $(cat scan.pid)
 }
 
 function verify() {
-    :
+    cd ${ED1}
+
+    > watch.ans
+    gen_log "dir/DC1"
+    gen_log "dir/DC2"
+
+    diff watch.log watch.ans && echo "Pass" || echo "Failed"
 }
 
 if [ $# == 0 ]; then

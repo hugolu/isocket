@@ -29,4 +29,5 @@ do
         # parse ongoing
         ${watch} ${dir}/${dbtag}
     done
+    sleep ${check_interval}
 done
