@@ -28,11 +28,11 @@ function scandir() {
         # parse ongoing
         ${watch} ${dir}/${dbtag}
     done
-    sleep ${check_interval}
 }
 
 while true
 do
     scandir
     [ $(basename $0) == "scan.daemon" ] || break
+    sleep ${check_interval}
 done

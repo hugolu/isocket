@@ -1,36 +1,11 @@
 #!/bin/bash
+source test_utils.sh
 
 ROOT=$(pwd)
 ED1="${ROOT}/ED1"
 
-function gen_dbtag() {
-    dir=$1
-    mkdir ${dir}
-
-    for ((i=0; i<3; i++)); do
-        timestamp=$(printf "15122500%02d.00" ${i})
-        touch -t ${timestamp} ${dir}/file${i}
-    done
-
-    timestamp=$(printf "15122500%02d.00" ${i})
-    touch -t ${timestamp} ${dir}/finished.parse
-}
-
-function gen_answer() {
-    dir=$1 
-
-    for ((i=0; i<3; i++)); do
-        echo "${dir}/file${i}" >> watch.ans
-    done
-    echo ${dir}/finished.parse >> watch.ans
-}
-
-function cleanup() {
-    rm -rf ${ED1}
-}
-
 function setup() {
-    cleanup
+    rmdir ${ED1}
 
     cd ${ROOT}
     mkdir -p ${ED1}/dir
@@ -47,9 +22,6 @@ function execute() {
     cd ${ED1}
 
     ./scan.sh
-
-    #sleep 1
-    #kill -9 $(cat scan.pid) 2>/dev/null
 }
 
 function verify() {
@@ -62,6 +34,10 @@ function verify() {
     cat watch.ans
 
     diff watch.log watch.ans && echo "Pass" || echo "Failed"
+}
+
+function cleanup() {
+    rmdir ${ED1}
 }
 
 if [ $# == 0 ]; then
