@@ -17,6 +17,9 @@ function scandir() {
 
         for file in $(ls -tr ${dir}/${dbtag})
         do
+            if [ ${file} == ${done_parse} ]; then
+                continue;
+            fi
             echo ${dir}/${dbtag}/${file} >> ${log}
         done
 

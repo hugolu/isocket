@@ -10,6 +10,7 @@ local PORT = conf["port"]
 
 local socket = require("socket")
 local table = require("table")
+local posix = require("posix.sys.stat")
 local tcp = assert(socket.tcp())
 
 -- write data from file to sock
@@ -24,6 +25,11 @@ end
 
 -- send file
 local function send(sock, path)
+    local mode = posix.stat(path).st_mode
+    if mode & posix.S_IWGRP == posix.S_IWGRP then
+        return
+    end
+
     local file = io.open(path, "r")
     local size = tonumber(fsize(file))
     local args = {"FILE", path, size}
@@ -36,6 +42,7 @@ local function send(sock, path)
     local resp = sock:receive("*l")
 
     file:close()
+    posix.chmod(path, mode | posix.S_IWGRP)
 end
 
 -- open fsync.log

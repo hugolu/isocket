@@ -1,5 +1,24 @@
 #!/bin/bash
 
+function gen_files() {
+    dir=$1
+    synced=$2
+
+    mkdir ${dir}
+
+    for ((i=0; i<3; i++)); do
+        timestamp=$(printf "15122500%02d.00" ${i})
+        dd if=/dev/urandom of=${dir}/file${i} bs=1k count=1 2>/dev/null
+        touch -t ${timestamp} ${dir}/file${i}
+        if [ $synced == "1" ]; then
+            chmod g+x ${dir}/file${i}
+        fi
+    done
+
+    timestamp=$(printf "15122500%02d.00" ${i})
+    touch -t ${timestamp} ${dir}/finished.parse
+}
+
 function gen_dbtag() {
     dir=$1
     parse_mark=$2
@@ -34,6 +53,24 @@ function gen_answer() {
     if [ ${parse_mark} != "0" ]; then
         echo ${dir}/finished.parse >> watch.ans
     fi
+}
+
+function start_daemon() {
+    dir=$1
+    daemon=$2
+
+    cd ${dir}
+    ${dir}/${daemon} &
+    echo $! > ${dir}/${daemon}.pid
+}
+
+function stop_daemon() {
+    dir=$1
+    daemon=$2
+
+    pid=$(cat ${dir}/${daemon}.pid)
+    echo "stop ${dir}/${daemon} (${pid})"
+    kill -9 ${pid}
 }
 
 function main() {
