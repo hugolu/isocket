@@ -29,12 +29,12 @@ function verify() {
 
     # prepare the expected result
     > watch.ans
-    gen_answer "dir/DC1" 1
-    gen_answer "dir/DC2" 1
+    gen_answer "dir/DC1"
+    gen_answer "dir/DC2"
     cat watch.ans
 
     # compare
-    diff watch.log watch.ans && echo "Pass" || echo "Failed"
+    assertTrue diff watch.log watch.ans
 }
 
 function cleanup() {
