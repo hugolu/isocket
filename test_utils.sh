@@ -11,7 +11,7 @@ function gen_files() {
         dd if=/dev/urandom of=${dir}/file${i} bs=1k count=1 2>/dev/null
         touch -t ${timestamp} ${dir}/file${i}
         if [ $synced == "1" ]; then
-            chmod g+x ${dir}/file${i}
+            chmod g+w ${dir}/file${i}
         fi
     done
 
@@ -22,17 +22,19 @@ function gen_files() {
 function chk_files() {
     src=$1
     dst=$2
-    num=$3
+    exist=$3
 
-    if [ $(ls ${dst} | grep "file" | wc -w) != ${num} ]; then
-        echo "Failed"
+    if [ ${exist} == 0 ]; then
+        [ -d ${dst} ] && return 0 || return 1
     fi
 
     files=$(ls ${dst} | grep "file")
     for file in ${files}
     do
-        diff ${src}/${file} ${dst}/${file} >/dev/null || echo "Failed"
+        diff ${src}/${file} ${dst}/${file} >/dev/null || return 1
     done
+
+    return 0
 }
 
 function gen_dbtag() {
