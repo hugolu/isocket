@@ -1,5 +1,10 @@
 #!/bin/bash
 
+function assertTrue() {
+    $@
+    [ $? == 0 ] && echo "Pass" || echo "Failed"
+}
+
 function gen_files() {
     dir=$1
     synced=$2

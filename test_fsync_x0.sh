@@ -39,8 +39,8 @@ function execute() {
 }
 
 function verify() {
-    chk_files "${ED1}/dir/DC1" "${DRMS}/dir/DC1" 1 && echo "Pass" || echo "Failed"
-    chk_files "${ED1}/dir/DC2" "${DRMS}/dir/DC2" 1 && echo "Pass" || echo "Failed"
+    assertTrue chk_files "${ED1}/dir/DC1" "${DRMS}/dir/DC1" 1
+    assertTrue chk_files "${ED1}/dir/DC2" "${DRMS}/dir/DC2" 1
 }
 
 function cleanup() {
