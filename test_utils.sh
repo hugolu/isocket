@@ -25,9 +25,13 @@ function gen_dbtag() {
 
 function gen_answer() {
     dir=$1 
+    parse_mark=$2
 
     for ((i=0; i<3; i++)); do
         echo "${dir}/file${i}" >> watch.ans
     done
-    echo ${dir}/finished.parse >> watch.ans
+
+    if [ ${parse_mark} != "0" ]; then
+        echo ${dir}/finished.parse >> watch.ans
+    fi
 }
