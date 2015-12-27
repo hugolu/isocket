@@ -12,13 +12,14 @@ do_fsync()
     fi
 }
 
-while [ 1 ]; do
-  if [ -f ${tmp} ]; then
-    do_fsync
-  elif [ -f ${log} ]; then
-    mv ${log} ${tmp}
-    do_fsync
-  else
+while true
+do
+    if [ -f ${tmp} ]; then
+        do_fsync
+    elif [ -f ${log} ]; then
+        mv ${log} ${tmp}
+        do_fsync
+    fi
+    [ $(basename $0) == "fsync.daemon" ] || break
     sleep ${check_interval}
-  fi
 done
