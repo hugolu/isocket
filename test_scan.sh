@@ -59,6 +59,7 @@ function verify() {
     gen_answer "dir/DC1"
     gen_answer "dir/DC2"
     gen_answer "dir/DC3"
+    cat watch.ans
 
     diff watch.log watch.ans && echo "Pass" || echo "Failed"
 }
