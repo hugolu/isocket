@@ -21,8 +21,3 @@ function gen_answer() {
     done
     echo ${dir}/finished.parse >> watch.ans
 }
-
-function rmdir() {
-    dir=$1
-    rm -rf ${ED1}
-}

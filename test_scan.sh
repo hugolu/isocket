@@ -5,13 +5,14 @@ ROOT=$(pwd)
 ED1="${ROOT}/ED1"
 
 function setup() {
-    rmdir ${ED1}
+    rm -rf ${ED1}
 
-    cd ${ROOT}
+    # install
     mkdir -p ${ED1}/dir
     cp scan.sh scan.conf ${ED1}
     cp watch.sh watch.conf ${ED1}
 
+    # prepare data
     cd ${ED1}
     gen_dbtag "dir/DC1"
     gen_dbtag "dir/DC2"
@@ -27,17 +28,19 @@ function execute() {
 function verify() {
     cd ${ED1}
 
+    # prepare the expected result
     > watch.ans
     gen_answer "dir/DC1"
     gen_answer "dir/DC2"
     gen_answer "dir/DC3"
     cat watch.ans
 
+    # compare
     diff watch.log watch.ans && echo "Pass" || echo "Failed"
 }
 
 function cleanup() {
-    rmdir ${ED1}
+    rm -rf ${ED1}
 }
 
 if [ $# == 0 ]; then
@@ -57,19 +60,15 @@ else
         "setup")
             setup
             ;;
-
         "execute")
             execute
             ;;
-
         "verify")
             verify
             ;;
-
         "cleanup")
             cleanup
             ;;
-
         *)
             echo "setup | execute | verify | cleanup"
             ;;
