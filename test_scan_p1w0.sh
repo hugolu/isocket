@@ -14,9 +14,8 @@ function setup() {
 
     # prepare data
     cd ${ED1}
-    gen_dbtag "dir/DC1"
-    gen_dbtag "dir/DC2"
-    gen_dbtag "dir/DC3"
+    gen_dbtag "dir/DC1" 1 0
+    gen_dbtag "dir/DC2" 1 0
 }
 
 function execute() {
@@ -32,7 +31,6 @@ function verify() {
     > watch.ans
     gen_answer "dir/DC1"
     gen_answer "dir/DC2"
-    gen_answer "dir/DC3"
     cat watch.ans
 
     # compare
