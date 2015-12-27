@@ -35,3 +35,37 @@ function gen_answer() {
         echo ${dir}/finished.parse >> watch.ans
     fi
 }
+
+function main() {
+    if [ $# == 0 ]; then
+        echo "==== setup"
+        setup
+
+        echo "==== execute"
+        execute
+
+        echo "==== verify"
+        verify
+
+        echo "==== cleanup"
+        cleanup
+    else
+        case $1 in
+            "setup")
+                setup
+                ;;
+            "execute")
+                execute
+                ;;
+            "verify")
+                verify
+                ;;
+            "cleanup")
+                cleanup
+                ;;
+            *)
+                echo "setup | execute | verify | cleanup"
+                ;;
+        esac
+    fi
+}
