@@ -35,7 +35,7 @@ function execute() {
     start_daemon ${ED1} fsync.sh
 
     # wait
-    sleep 3
+    sleep 2
 
     # stop ED1
     stop_daemon ${ED1} scan.daemon
@@ -46,7 +46,8 @@ function execute() {
 }
 
 function verify() {
-echo "3"
+    chk_files "${ED1}/dir/DC1" "${DRMS}/dir/DC1" 3
+    chk_files "${ED1}/dir/DC2" "${DRMS}/dir/DC2" 3
 }
 
 function cleanup() {

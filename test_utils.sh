@@ -19,6 +19,22 @@ function gen_files() {
     touch -t ${timestamp} ${dir}/finished.parse
 }
 
+function chk_files() {
+    src=$1
+    dst=$2
+    num=$3
+
+    if [ $(ls ${dst} | grep "file" | wc -w) != ${num} ]; then
+        echo "Failed"
+    fi
+
+    files=$(ls ${dst} | grep "file")
+    for file in ${files}
+    do
+        diff ${src}/${file} ${dst}/${file} >/dev/null || echo "Failed"
+    done
+}
+
 function gen_dbtag() {
     dir=$1
     parse_mark=$2
