@@ -25,7 +25,7 @@ function chk_files() {
     exist=$3
 
     if [ ${exist} == 0 ]; then
-        [ -d ${dst} ] && return 0 || return 1
+        [ -d ${dst} ] && return 1 || return 0
     fi
 
     files=$(ls ${dst} | grep "file")
