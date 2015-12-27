@@ -41,4 +41,4 @@ function cleanup() {
     rm -rf ${ED1}
 }
 
-main
+main $@
