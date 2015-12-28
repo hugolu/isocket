@@ -1,5 +1,5 @@
 #!/bin/bash
-source test_utils.sh
+source "test/utils.sh"
 
 ROOT=$(pwd)
 ED1="${ROOT}/ED1"
