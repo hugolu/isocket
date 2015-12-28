@@ -7,7 +7,7 @@ DRMS="${ROOT}/DRMS"
 
 function setup() {
     rm -rf ${ED1}
-    rm -rf ${ED2}
+    rm -rf ${DRMS}
 
     # install
     mkdir -p ${ED1}/dir
@@ -35,7 +35,7 @@ function execute() {
     gen_files ${ED1}/dir/DC1 0
     gen_files ${ED1}/dir/DC2 0
     gen_files ${ED1}/dir/DC3 0
-    sleep 5
+    sleep 4
 
     # stop ED1
     stop_daemon ${ED1}/scan.daemon
