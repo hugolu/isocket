@@ -20,9 +20,8 @@ function setup() {
     cp utils.lua lsocket.server lsocket.conf ${DRMS}
 
     # prepare data
-    cd ${ED1}
-    gen_files "dir/DC1" 1
-    gen_files "dir/DC2" 0
+    gen_files "${ED1}/dir/DC1" 1
+    gen_files "${ED1}/dir/DC2" 0
 }
 
 function execute() {
