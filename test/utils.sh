@@ -74,20 +74,19 @@ function gen_answer() {
 }
 
 function start_daemon() {
-    dir=$1
-    daemon=$2
+    srv=$1
+    dir=$(dirname ${srv})
 
     cd ${dir}
-    ${dir}/${daemon} &
-    echo $! > ${dir}/${daemon}.pid
+    ${srv} &
+    echo $! > ${srv}.pid
 }
 
 function stop_daemon() {
-    dir=$1
-    daemon=$2
+    srv=$1
+    pid=$(cat ${srv}.pid)
 
-    pid=$(cat ${dir}/${daemon}.pid)
-    echo "stop ${dir}/${daemon} (${pid})"
+    echo "stop ${srv} (${pid})"
     kill -9 ${pid}
 }
 

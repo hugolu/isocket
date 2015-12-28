@@ -27,7 +27,7 @@ function setup() {
 
 function execute() {
     # run DRMS
-    start_daemon ${DRMS} lsocket.server
+    start_daemon ${DRMS}/lsocket.server
 
     # run ED1
     cd ${ED1}
@@ -35,7 +35,7 @@ function execute() {
     ./fsync.sh
 
     # stop DRMS
-    stop_daemon ${DRMS} lsocket.server
+    stop_daemon ${DRMS}/lsocket.server
 }
 
 function verify() {
