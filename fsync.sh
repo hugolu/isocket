@@ -19,7 +19,8 @@ do
     elif [ -f ${log} ]; then
         mv ${log} ${tmp}
         do_fsync
+    else
+        sleep ${check_interval}
     fi
     [ $(basename $0) == "fsync.daemon" ] || break
-    sleep ${check_interval}
 done

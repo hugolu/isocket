@@ -24,24 +24,31 @@ function setup() {
 
 function execute() {
     # run DRMS
-    start_daemon ${DRMS} lsocket.server
+    start_daemon ${DRMS}/lsocket.server
 
     # run ED1
-    start_daemon ${ED1} scan.daemon
-    start_daemon ${ED2} fsync.daemon
-
-    # generate data
+    start_daemon ${ED1}/scan.daemon
+    start_daemon ${ED1}/fsync.daemon
     sleep 1
 
+    # generate data
+    gen_files ${ED1}/dir/DC1 0
+    gen_files ${ED1}/dir/DC2 0
+    gen_files ${ED1}/dir/DC3 0
+    sleep 5
+
     # stop ED1
-    stop_daemon ${ED1} scan.daemon
-    stop_daemon ${ED2} fsync.daemon
+    stop_daemon ${ED1}/scan.daemon
+    stop_daemon ${ED1}/fsync.daemon
 
     # stop DRMS
-    stop_daemon ${DRMS} lsocket.server
+    stop_daemon ${DRMS}/lsocket.server
 }
 
 function verify() {
+    assertTrue chk_files "${ED1}/dir/DC1" "${DRMS}/dir/DC1" 1
+    assertTrue chk_files "${ED1}/dir/DC2" "${DRMS}/dir/DC2" 1
+    assertTrue chk_files "${ED1}/dir/DC3" "${DRMS}/dir/DC3" 1
 }
 
 function cleanup() {
@@ -49,4 +56,4 @@ function cleanup() {
     rm -rf ${DRMS}
 }
 
-main $@
+do_test $@
