@@ -29,6 +29,17 @@ function scandir() {
         # parse ongoing
         echo "${watch} ${dir}/${dbtag}"
         ${watch} ${dir}/${dbtag}
+
+        # last pick
+        for file in $(ls -tr ${dir}/${dbtag})
+        do
+            [ ${file} == ${done_parse} ] && continue
+            [ ${file} == ${done_watch} ] && continue
+
+            mode=$(ls -l ${dir}/${dbtag}/${file})
+            [ "${mode:5:1}" == "w" ] && continue
+            echo ${dir}/${dbtag}/${file} >> ${log}
+        done
     done
 }
 

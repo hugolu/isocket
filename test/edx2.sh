@@ -45,14 +45,13 @@ function execute() {
     start_daemon ${ED2}/fsync.daemon
 
     # generate data
-    sleep 1
     gen_files ${ED1}/dir/DC1 0
     gen_files ${ED2}/dir/DC4 0
     gen_files ${ED1}/dir/DC2 0
     gen_files ${ED2}/dir/DC5 0
     gen_files ${ED1}/dir/DC3 0
     gen_files ${ED2}/dir/DC6 0
-    sleep 4
+    sleep 5
 
     # stop ED1
     stop_daemon ${ED1}/scan.daemon

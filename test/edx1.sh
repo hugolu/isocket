@@ -29,7 +29,7 @@ function execute() {
     # run ED1
     start_daemon ${ED1}/scan.daemon
     start_daemon ${ED1}/fsync.daemon
-    sleep 1
+    #sleep 1
 
     # generate data
     gen_files ${ED1}/dir/DC1 0
