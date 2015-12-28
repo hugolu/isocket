@@ -91,7 +91,7 @@ function stop_daemon() {
     kill -9 ${pid}
 }
 
-function main() {
+function do_test() {
     if [ $# == 0 ]; then
         echo "==== setup"
         setup

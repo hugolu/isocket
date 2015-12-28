@@ -48,4 +48,4 @@ function cleanup() {
     rm -rf ${DRMS}
 }
 
-main $@
+do_test $@
