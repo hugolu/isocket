@@ -7,9 +7,11 @@ local BUFSIZ = (1024*1024)
 local conf = load_file('lsocket.conf')
 local SERV = conf["server"]
 local PORT = conf["port"]
+local SYNCFILE = conf["syncfile"]
 
 local socket = require("socket")
 local table = require("table")
+local lfs = require("lfs")
 local posix = require("posix.sys.stat")
 local tcp = assert(socket.tcp())
 
@@ -42,6 +44,14 @@ local function send(sock, path)
     local resp = sock:receive("*l")
 
     file:close()
+
+    -- log last modification time
+    local mtime = lfs.attributes(path).modification
+    file = io.open(SYNCFILE, "w")
+    file:write(mtime .. "\n")
+    file:close()
+
+    -- chmod g+w
     posix.chmod(path, mode | posix.S_IWGRP)
 end
 
