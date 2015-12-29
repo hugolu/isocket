@@ -35,3 +35,20 @@
 - 註2：sender 傳送檔案後，將檔案權限 group write mode 設為 enable
 - 註3：watcher 啟動 inotifywait 監控目錄動態產生的檔案，一旦看到finished.parse則停止監控目錄，並產生finished.watch標記任務完成
 - 註4：有finished.watch，無finished.parse`，表示目錄沒有正常被關閉
+
+____
+## 目錄結構
+
+| 檔名 | 說明 |
+|------|------|
+| install.sh | 安裝環境的 script |
+| scan.conf | scan.sh or scan.daemon 的 config file |
+| scan.sh | 負責掃描 /datas 的程式 |
+| watch.conf | watch.sh 的 config file |
+| watch.sh | the shell script monitoring events of creating files in a directory| fsync.conf | fsync.sh 的 config file |
+| fsync.sh | the shell script to sync files to remote server |
+| lsocket.conf | lsocket client/server 的 config file |
+| lsocket.client    | lsocket client 檔案傳送端 |
+| lsocket.server | lsocket server 檔案接收端 |
+| utils.lua | lsocket client/server 公用程式 |
+| test/ | 一堆測試 |
