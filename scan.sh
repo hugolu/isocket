@@ -2,8 +2,8 @@
 source scan.conf
 
 function scandir() {
-    dbtags=$(ls -tr ${dir} | grep ${tag})
-    last=$(ls -tr ${dir} | grep ${tag} | tail -n1)
+    dbtags=$(ls -tr ${dir} | grep "^${tag}")
+    last=$(ls -tr ${dir} | grep "^${tag}" | tail -n1)
 
     for dbtag in ${dbtags}
     do
