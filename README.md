@@ -140,3 +140,64 @@ $ test/fsync_x0.sh cleanup
 ```
 $ test/fsync_x0.sh
 ```
+
+## 安裝、啟動系統
+
+安裝方式請參考 test/edx1.sh setup()
+```
+    # install ED1
+    mkdir -p ${ED1}/dir
+    cp scan.sh ${ED1}/scan.daemon
+    cp scan.conf ${ED1}
+    cp watch.sh watch.conf ${ED1}
+    cp fsync.sh ${ED1}/fsync.daemon
+    cp fsync.conf ${ED1}
+    cp utils.lua lsocket.client lsocket.conf ${ED1}
+
+    # install DRMS
+    mkdir -p ${DRMS}/dir
+    cp utils.lua lsocket.server lsocket.conf ${DRMS}
+```
+
+啟動方式請參考 test/edx1.sh execute()
+```
+    # run DRMS
+    start_daemon ${DRMS}/lsocket.server
+
+    # run ED1
+    start_daemon ${ED1}/scan.daemon
+    start_daemon ${ED1}/fsync.daemon
+```
+
+___
+## 附錄：Lua 改變檔案權限
+
+- 相依套件：[Lua bindings for POSIX](https://luarocks.org/modules/gvvaughan/luaposix)
+- 說明文件：[luaposix 33.3.0 Document](http://luaposix.github.io/luaposix/)
+
+範例程式 chmod.lua
+```
+#!/usr/local/bin/lua
+local P=require("posix.sys.stat")
+
+local file=arg[1]
+
+mode=P.stat(file).st_mode
+if mode & P.S_IWGRP == P.S_IWGRP then
+    print ("IWGRP:1->0")
+    P.chmod(file, mode & ~P.S_IWGRP)
+else
+    print ("IWGRP:0->1")
+    P.chmod(file, mode | P.S_IWGRP)
+end
+```
+
+操作過程
+```
+$ ./chmod.lua chmod.lua && ll chmod.lua
+IWGRP:0->1
+-rwxrwxr-x 1 vagrant vagrant 271 Dec 25 09:21 chmod.lua
+$ ./chmod.lua chmod.lua && ll chmod.lua
+IWGRP:1->0
+-rwxr-xr-x 1 vagrant vagrant 271 Dec 25 09:21 chmod.lua
+```
