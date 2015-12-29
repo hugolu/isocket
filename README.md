@@ -125,3 +125,18 @@ sudo cp -f utils.lua /usr/local/share/lua/5.3/
 | fsync_x1.sh | 測試 dbtag 裡面的檔案有設定 g+w | 檔案已被傳輸 |
 | edx1.sh | 測試一台ED連接DRMS | |
 | edx2.sh | 測試兩台ED連接DRMS | |
+
+測試方式 (以 test/fsync_x0.sh 為例)，單步執行方式
+```
+$ test/fsync_x0.sh help
+setup | execute | verify | cleanup
+$ test/fsync_x0.sh setup
+$ test/fsync_x0.sh execute
+$ test/fsync_x0.sh verify
+$ test/fsync_x0.sh cleanup
+```
+
+一次跑完所有步驟，執行方式
+```
+$ test/fsync_x0.sh
+```
