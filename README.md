@@ -52,3 +52,76 @@ ____
 | lsocket.server | lsocket server 檔案接收端 |
 | utils.lua | lsocket client/server 公用程式 |
 | test/ | 一堆測試 |
+
+## 安裝環境
+
+懶人安裝，執行 install.sh，或按照下面指示逐一安裝相關套件。
+
+安裝 Lua
+```
+sudo apt-get install -y libreadline-dev
+curl -R -O http://www.lua.org/ftp/lua-5.3.1.tar.gz
+tar zxf lua-5.3.1.tar.gz
+cd lua-5.3.1
+make linux test
+sudo make install
+```
+
+安裝 Luarocks
+```
+sudo apt-get install -y unzip
+wget http://luarocks.org/releases/luarocks-2.2.2.tar.gz
+tar zxpf luarocks-2.2.2.tar.gz
+cd luarocks-2.2.2
+./configure
+sudo make bootstrap
+```
+
+安裝 LuaSocket
+```
+sudo luarocks install luasocket
+```
+
+安裝 LuaEvent
+```
+sudo apt-get install -y libevent-dev
+sudo apt-get install -y git
+git clone https://github.com/hugolu/luaevent
+cd luaevent
+make install
+```
+
+安裝 LuaFileSystem
+```
+sudo luarocks install luafilesystem
+```
+
+安裝 LuaPosix
+```
+sudo luarocks install luaposix
+```
+
+安裝 inotify-tools
+```
+sudo apt-get install -y inotify-tools
+```
+
+安裝 lsocket utils
+```
+sudo cp -f utils.lua /usr/local/share/lua/5.3/
+```
+
+## 測試
+
+在 test/ 目錄中，
+
+| 檔案 | 測試項目 | 註解 |
+|------|----------|------|
+| scan_p0w0.sh | 測試 dbtag裡面無 finished.parse、無 finished.watch 的狀況 | dbtag 沒被parser正常關閉，未完成同步傳輸 |
+| scan_p0w1.sh | 測試 dbtag裡面無 finished.parse、有 finished.watch 的狀況 | dbtag 沒被parser正常關閉，已完成同步傳輸 |
+| scan_p1w0.sh | 測試 dbtag裡面有 finished.parse、無 finished.watch 的狀況 | dbtag 有被parser正常關閉，未完成同步傳輸 |
+| scan_p1w1.sh | 測試 dbtag裡面有 finished.parse、有 finished.watch 的狀況 | dbtag 有被parser正常關閉，已完成同步傳輸 |
+| fsync_x0.sh | 測試 dbtag 裡面的檔案無設定 g+w | 檔案未被傳輸 |
+| fsync_x1.sh | 測試 dbtag 裡面的檔案有設定 g+w | 檔案已被傳輸 |
+| edx1.sh | 測試一台ED連接DRMS | |
+| edx2.sh | 測試兩台ED連接DRMS | |
