@@ -20,9 +20,11 @@ local function write(file, sock, size)
     local offset = 0
     while offset < size do
         local len = math.min(size-offset, BUFSIZ)
-        sock:send(file:read(len))
+        rc = sock:send(file:read(len))
+        if not rc then return nil end
         offset = offset + len
     end
+    return size
 end
 
 -- send file
@@ -37,10 +39,12 @@ local function send(sock, path)
     local args = {"FILE", path, size}
     show_array(args)
 
-    sock:send(table.concat(args, ":") .. "\n")
+    rc = sock:send(table.concat(args, ":") .. "\n")
+    if not rc then print("bad socket"); os.exit() end
     local resp = sock:receive("*l")
 
-    write(file, sock, size)
+    rc = write(file, sock, size)
+    if not rc then print("bad socket"); os.exit() end
     local resp = sock:receive("*l")
 
     file:close()
